@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TodaysWeather</string>
+
+    <string name="message_request_permission_rationale">You have denied this permission and requested not to be asked again. Would you like to enable this permission in the app settings?</string>
+    <string name="message_location_rationale">This permission is required to find your location.</string>
+    <string name="button_refresh">Refresh</string>
+</resources>
