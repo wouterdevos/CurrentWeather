@@ -1,4 +1,4 @@
-package com.wouterdevos.todaysweather.util;
+package com.wouterdevos.currentweather.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

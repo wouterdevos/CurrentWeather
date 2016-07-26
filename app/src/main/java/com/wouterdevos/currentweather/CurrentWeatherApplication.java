@@ -1,9 +1,9 @@
-package com.wouterdevos.todaysweather;
+package com.wouterdevos.currentweather;
 
 import android.app.Application;
 import android.content.Context;
 
-public class TodaysWeatherApplication extends Application {
+public class CurrentWeatherApplication extends Application {
 
     private static Context sContext;
 

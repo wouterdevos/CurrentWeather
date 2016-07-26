@@ -1,9 +1,14 @@
-package com.wouterdevos.todaysweather.rest;
+package com.wouterdevos.currentweather.rest;
 
 import android.location.Location;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wouterdevos.currentweather.database.DatabaseHelper;
+import com.wouterdevos.currentweather.valueobject.Error;
+import com.wouterdevos.currentweather.valueobject.Weather;
+
+import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,18 +19,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WeatherApiController {
 
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
-    private static final String IMAGE_URL = "http://openweathermap.org/img/w/";
     private static final String APP_ID = "257103d5c2fd659a0281deda32fe6014";
     private static final String UNITS_METRIC = "metric";
 
     private static final int UNKOWN_STATUS_CODE = -1;
+
+    public static final String IMAGE_URL = "http://openweathermap.org/img/w/%s";
 
     private static Retrofit sRetrofit;
 
     private static Retrofit getRetrofitInstance() {
         if (sRetrofit == null) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(WeatherResponse.class, new WeatherDeserializer())
+                    .registerTypeAdapter(Weather.class, new WeatherDeserializer())
                     .create();
 
             sRetrofit = new Retrofit.Builder()
@@ -40,15 +46,16 @@ public class WeatherApiController {
     public static void getWeatherByCoordinates(Location location) {
         Retrofit retrofit = getRetrofitInstance();
         WeatherApiService apiService = retrofit.create(WeatherApiService.class);
-        Call<WeatherResponse> call = apiService.getWeatherByCoordinates(APP_ID, UNITS_METRIC,
+        Call<Weather> call = apiService.getWeatherByCoordinates(APP_ID, UNITS_METRIC,
                 location.getLatitude(), location.getLongitude());
-        call.enqueue(new Callback<WeatherResponse>() {
+        call.enqueue(new Callback<Weather>() {
             @Override
-            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
                 if (response.isSuccessful()) {
-                    WeatherResponse weatherResponse = response.body();
-                    if (weatherResponse != null) {
-//                        EventBus.getDefault().post(response.body());
+                    Weather weather = response.body();
+                    if (weather != null) {
+                        DatabaseHelper.getInstance().insertWeather(weather);
+                        EventBus.getDefault().post(weather);
                     } else {
                         postRequestFailed(UNKOWN_STATUS_CODE);
                     }
@@ -58,15 +65,15 @@ public class WeatherApiController {
             }
 
             @Override
-            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+            public void onFailure(Call<Weather> call, Throwable t) {
                 postRequestFailed(UNKOWN_STATUS_CODE);
             }
         });
     }
 
     private static void postRequestFailed(int statusCode) {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setStatusCode(statusCode);
-//        EventBus.getDefault().post(errorResponse);
+        Error error = new Error();
+        error.setStatusCode(statusCode);
+        EventBus.getDefault().post(error);
     }
 }

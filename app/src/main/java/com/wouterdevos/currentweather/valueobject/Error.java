@@ -1,6 +1,6 @@
-package com.wouterdevos.todaysweather.rest;
+package com.wouterdevos.currentweather.valueobject;
 
-public class ErrorResponse {
+public class Error {
 
     private int statusCode;
 

@@ -1,4 +1,4 @@
-package com.wouterdevos.todaysweather.loader;
+package com.wouterdevos.currentweather.loader;
 
 import android.Manifest;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.support.v4.content.Loader;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;

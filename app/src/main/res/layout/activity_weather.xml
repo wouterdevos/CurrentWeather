@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/table_row_height">
+
+                    <TextView
+                        android:id="@+id/temperature"
+                        style="@style/WeatherTextLarge"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        tools:text="9&#8451;" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/icon"
+                            android:layout_width="@dimen/table_row_height"
+                            android:layout_height="@dimen/table_row_height"
+                            android:layout_centerInParent="true"
+                            tools:src="@color/background_icon" />
+
+                    </RelativeLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/table_row_height">
+
+                    <TextView
+                        android:id="@+id/high_and_low"
+                        style="@style/WeatherTextSmall"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/table_row_height"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        tools:text="High 20&#8451; Low 12&#8451;" />
+
+                    <TextView
+                        android:id="@+id/description"
+                        style="@style/WeatherTextSmall"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/table_row_height"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        tools:text="Clouds With Light Showers" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="@dimen/progress_bar_size"
+                android:layout_height="@dimen/progress_bar_size"
+                android:layout_marginLeft="@dimen/progress_bar_horizontal_margin"
+                android:layout_marginTop="@dimen/progress_bar_vertical_margin"
+                android:visibility="gone" />
+
+        </android.support.v7.widget.CardView>
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_view"
+            android:onClick="refresh"
+            android:text="@string/button_refresh" />
+
+    </RelativeLayout>
+</layout>
+

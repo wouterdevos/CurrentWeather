@@ -1,4 +1,4 @@
-package com.wouterdevos.todaysweather;
+package com.wouterdevos.currentweather;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

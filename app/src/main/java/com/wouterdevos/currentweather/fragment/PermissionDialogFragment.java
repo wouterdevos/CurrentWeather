@@ -1,4 +1,4 @@
-package com.wouterdevos.todaysweather.fragment;
+package com.wouterdevos.currentweather.fragment;
 
 
 import android.app.Dialog;
@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.wouterdevos.todaysweather.R;
+import com.wouterdevos.currentweather.R;
 
 public class PermissionDialogFragment extends DialogFragment {
 

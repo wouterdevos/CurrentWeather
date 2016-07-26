@@ -1,29 +1,32 @@
-package com.wouterdevos.todaysweather.activity;
+package com.wouterdevos.currentweather.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-import com.wouterdevos.todaysweather.R;
-import com.wouterdevos.todaysweather.fragment.PermissionDialogFragment;
-import com.wouterdevos.todaysweather.loader.LocationLoader;
-import com.wouterdevos.todaysweather.model.WeatherModel;
-import com.wouterdevos.todaysweather.service.LocationService;
+import com.bumptech.glide.Glide;
+import com.wouterdevos.currentweather.R;
+import com.wouterdevos.currentweather.databinding.ActivityWeatherBinding;
+import com.wouterdevos.currentweather.fragment.PermissionDialogFragment;
+import com.wouterdevos.currentweather.presenter.WeatherContract;
+import com.wouterdevos.currentweather.presenter.WeatherPresenter;
+import com.wouterdevos.currentweather.valueobject.Error;
+import com.wouterdevos.currentweather.valueobject.Weather;
+import com.wouterdevos.currentweather.service.LocationService;
 
-public class MainActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity implements WeatherContract.View {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = WeatherActivity.class.getSimpleName();
 
     public static final String TAG_PERMISSION_DIALOG_FRAGMENT = "TAG_PERMISSION_DIALOG_FRAGMENT";
 
@@ -33,33 +36,21 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mRequestPermissionOnResume = true;
 
-    private WeatherModel mWeatherModel;
-
-    private LoaderManager.LoaderCallbacks<Location> mLocationLoaderCallback =
-            new LoaderManager.LoaderCallbacks<Location>() {
-        @Override
-        public Loader<Location> onCreateLoader(int id, Bundle args) {
-            return new LocationLoader(MainActivity.this);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Location> loader, Location data) {
-            // Request weather from WeatherModel.
-            Log.i(TAG, "onLoadFinished: data " + data);
-            mWeatherModel.getWeatherByCoordinates(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Location> loader) {
-
-        }
-    };
+    private WeatherPresenter mWeatherPresenter;
+    private ActivityWeatherBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mWeatherModel = WeatherModel.getInstance();
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_weather);
+//        setContentView(R.layout.activity_weather);
+        mWeatherPresenter = new WeatherPresenter(this, getSupportLoaderManager(), getApplicationContext());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mWeatherPresenter.registerEventBus();
     }
 
     @Override
@@ -74,6 +65,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 //        mRequestPermissionOnResume = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mWeatherPresenter.unregisterEventBus();
+    }
+
+    @Override
+    public void setProgressIndicator(boolean loading) {
+        mBinding.progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showWeather(Weather weather) {
+        Log.i(TAG, "showWeather: weatherResponse " + weather);
+        boolean isWeather = weather != null;
+        mBinding.description.setVisibility(isWeather ? View.VISIBLE : View.GONE);
+        mBinding.temperature.setVisibility(isWeather ? View.VISIBLE : View.GONE);
+        mBinding.highAndLow.setVisibility(isWeather ? View.VISIBLE : View.GONE);
+        mBinding.icon.setVisibility(isWeather ? View.VISIBLE : View.GONE);
+
+        mBinding.description.setText(weather.getMain());
+        mBinding.temperature.setText(weather.getFormattedTemp());
+        mBinding.highAndLow.setText(weather.getFormattedHighAndLow());
+        Glide.with(this)
+                .load(weather.getIconUrl())
+                .centerCrop()
+                .crossFade()
+                .into(mBinding.icon);
+    }
+
+    @Override
+    public void showError(Error error) {
+        Toast.makeText(this, R.string.toast_error_retrieving_weather, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showConnectivityStatus(boolean online) {
+
     }
 
     //region Permissions
@@ -101,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
         mRequestPermissionOnResume = false;
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getSupportLoaderManager().initLoader(ID_LOCATION_LOADER, null, mLocationLoaderCallback);
+            mWeatherPresenter.loadCurrentWeather();
+//            getSupportLoaderManager().initLoader(ID_LOCATION_LOADER, null, mLocationLoaderCallback);
 //            startLocationService();
         } else {
 //            String permission = permissions[0];

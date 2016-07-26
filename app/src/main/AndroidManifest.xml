@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wouterdevos.todaysweather">
+    package="com.wouterdevos.currentweather">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name=".TodaysWeatherApplication"
+        android:name=".CurrentWeatherApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,7 +17,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.wouterdevos.currentweather.activity.WeatherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
         </activity>
 
         <service
-            android:name=".service.LocationService"
+            android:name="com.wouterdevos.currentweather.service.LocationService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

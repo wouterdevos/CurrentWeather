@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="WeatherTextLarge">
+        <item name="android:textSize">55sp</item>
+    </style>
+
+    <style name="WeatherTextSmall">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

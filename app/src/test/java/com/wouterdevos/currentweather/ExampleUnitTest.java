@@ -1,4 +1,4 @@
-package com.wouterdevos.todaysweather;
+package com.wouterdevos.currentweather;
 
 import org.junit.Test;
 

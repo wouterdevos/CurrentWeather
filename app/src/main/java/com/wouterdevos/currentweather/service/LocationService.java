@@ -1,4 +1,4 @@
-package com.wouterdevos.todaysweather.service;
+package com.wouterdevos.currentweather.service;
 
 import android.Manifest;
 import android.app.Service;
@@ -17,7 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.wouterdevos.todaysweather.util.PreferencesHelper;
+import com.wouterdevos.currentweather.util.PreferencesHelper;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
