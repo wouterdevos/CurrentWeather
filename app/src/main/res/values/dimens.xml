@@ -6,5 +6,13 @@
     <dimen name="progress_bar_size">24dp</dimen>
     <dimen name="progress_bar_horizontal_margin">4dp</dimen>
     <dimen name="progress_bar_vertical_margin">4dp</dimen>
+
     <dimen name="table_row_height">60dp</dimen>
+
+    <dimen name="card_corner_radius">3dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+
+    <dimen name="toolbar_content_inset_start">16dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+
 </resources>

@@ -1,13 +1,17 @@
 <resources>
-    <string name="app_name">TodaysWeather</string>
+    <string name="app_name">Current Weather</string>
 
     <string name="message_request_permission_rationale">You have denied this permission and requested not to be asked again. Would you like to enable this permission in the app settings?</string>
     <string name="message_location_rationale">This permission is required to find your location.</string>
+    <string name="message_current_weather_unavailable">Current weather unavailable!</string>
 
     <string name="button_refresh">Refresh</string>
 
     <string name="title_temperature">%.0f&#8451;</string>
     <string name="title_high_and_low">High %1$.0f&#8451; Low %2$.0f&#8451;</string>
 
-    <string name="toast_error_retrieving_weather">There was an error retrieving the weather.</string>
+    <string name="toast_error_connecting_to_internet">There was an error connecting to the internet.</string>
+    <string name="toast_error_retrieving_location">There was an error retrieving your current location.</string>
+
+    <string name="menu_refresh">Refresh</string>
 </resources>

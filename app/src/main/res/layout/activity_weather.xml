@@ -4,23 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="weather"
+            type="com.wouterdevos.currentweather.valueobject.Weather" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="@dimen/toolbar_elevation"
+            app:contentInsetStart="@dimen/toolbar_content_inset_start"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:cardCornerRadius="3dp"
-            app:cardElevation="3dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardElevation="@dimen/card_elevation"
             app:cardUseCompatPadding="true">
 
             <TableLayout
@@ -29,7 +43,8 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin">
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:visibility="@{weather == null ? View.INVISIBLE : View.VISIBLE}">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -42,6 +57,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:text="@{weather.formattedTemp}"
                         tools:text="9&#8451;" />
 
                     <RelativeLayout
@@ -71,6 +87,7 @@
                         android:layout_height="@dimen/table_row_height"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:text="@{weather.formattedHighAndLow}"
                         tools:text="High 20&#8451; Low 12&#8451;" />
 
                     <TextView
@@ -80,30 +97,33 @@
                         android:layout_height="@dimen/table_row_height"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:text="@{weather.main}"
                         tools:text="Clouds With Light Showers" />
 
                 </TableRow>
 
             </TableLayout>
 
+            <TextView
+                style="@style/WeatherTextSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/message_current_weather_unavailable"
+                android:visibility="@{weather == null ? View.VISIBLE : View.GONE}" />
+
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="@dimen/progress_bar_size"
                 android:layout_height="@dimen/progress_bar_size"
-                android:layout_marginLeft="@dimen/progress_bar_horizontal_margin"
+                android:layout_gravity="right"
                 android:layout_marginTop="@dimen/progress_bar_vertical_margin"
+                android:layout_marginRight="@dimen/progress_bar_horizontal_margin"
                 android:visibility="gone" />
 
         </android.support.v7.widget.CardView>
 
-        <Button
-            android:id="@+id/refresh_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/card_view"
-            android:onClick="refresh"
-            android:text="@string/button_refresh" />
-
     </RelativeLayout>
+
 </layout>
 

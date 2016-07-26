@@ -5,12 +5,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import com.wouterdevos.currentweather.loader.LocationLoader;
 import com.wouterdevos.currentweather.loader.WeatherLoader;
-import com.wouterdevos.currentweather.valueobject.Error;
 import com.wouterdevos.currentweather.rest.WeatherApiController;
+import com.wouterdevos.currentweather.valueobject.Error;
 import com.wouterdevos.currentweather.valueobject.Weather;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +37,12 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
         @Override
         public void onLoadFinished(Loader<Location> loader, Location data) {
-            WeatherApiController.getWeatherByCoordinates(data);
+            if (data != null) {
+                WeatherApiController.getWeatherByCoordinates(data);
+            } else {
+                mWeatherView.setProgressIndicator(false);
+                mWeatherView.showLocationError();
+            }
         }
 
         @Override
@@ -55,11 +59,10 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
         @Override
         public void onLoadFinished(Loader<Weather> loader, Weather weather) {
+            mWeatherView.setProgressIndicator(false);
             if (weather != null) {
-                mWeatherView.setProgressIndicator(false);
                 mWeatherView.showWeather(weather);
             }
-            mLoaderManager.initLoader(ID_LOCATION_LOADER, null, mLocationLoaderCallbacks);
         }
 
         @Override
@@ -76,8 +79,19 @@ public class WeatherPresenter implements WeatherContract.Presenter {
     }
 
     @Override
-    public void start() {
-//        mLoaderManager.initLoader(ID_LOCATION_LOADER, null, mLocationLoaderCallbacks);
+    public void startWeatherLoader() {
+        mWeatherView.setProgressIndicator(true);
+        mLoaderManager.initLoader(ID_LOCATION_LOADER, null, mWeatherLoaderCallbacks);
+    }
+
+    @Override
+    public void startLocationLoader() {
+        mWeatherView.setProgressIndicator(true);
+        if (!mLocationLoader.isStarted()) {
+            mLoaderManager.initLoader(ID_WEATHER_LOADER, null, mLocationLoaderCallbacks);
+        } else {
+            mLocationLoader.forceLoad();
+        }
     }
 
     @Override
@@ -90,20 +104,9 @@ public class WeatherPresenter implements WeatherContract.Presenter {
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void loadCurrentWeather() {
-        mWeatherView.setProgressIndicator(true);
-        mLoaderManager.initLoader(ID_WEATHER_LOADER, null, mWeatherLoaderCallbacks);
-    }
-
-    @Override
-    public void findCurrentLocation() {
-
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRequestFailed(Error error) {
-        Log.i(TAG, "onRequestFailed: ");
-        mWeatherView.showError(error);
+        mWeatherView.setProgressIndicator(false);
+        mWeatherView.showWeatherError(error);
     }
 }

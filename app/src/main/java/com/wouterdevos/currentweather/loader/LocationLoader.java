@@ -36,12 +36,7 @@ public class LocationLoader extends Loader<Location> implements GoogleApiClient.
             deliverResult(mLastLocation);
         }
 
-        if (mGoogleApiClient == null) {
-            buildGoogleApiClient();
-            mGoogleApiClient.connect();
-        } else if (mGoogleApiClient.isConnected()) {
-            requestLocationUpdates();
-        }
+        init();
     }
 
     @Override
@@ -49,20 +44,13 @@ public class LocationLoader extends Loader<Location> implements GoogleApiClient.
         super.onStopLoading();
         if (mGoogleApiClient.isConnected()) {
             removeLocationUpdates();
-            mGoogleApiClient.disconnect();
         }
     }
 
     @Override
     protected void onForceLoad() {
         super.onForceLoad();
-        if (mLastLocation != null) {
-            deliverResult(mLastLocation);
-        }
-
-        if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-        }
+        init();
     }
 
     @Override
@@ -74,14 +62,6 @@ public class LocationLoader extends Loader<Location> implements GoogleApiClient.
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-//        if (hasPermission()) {
-//            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//        }
-
-//        if (mLastLocation != null) {
-//            deliverResult(mLastLocation);
-//        }
-
         requestLocationUpdates();
     }
 
@@ -102,6 +82,15 @@ public class LocationLoader extends Loader<Location> implements GoogleApiClient.
         mLastLocation = location;
         deliverResult(location);
         removeLocationUpdates();
+    }
+
+    private void init() {
+        if (mGoogleApiClient == null) {
+            buildGoogleApiClient();
+            mGoogleApiClient.connect();
+        } else if (mGoogleApiClient.isConnected()) {
+            requestLocationUpdates();
+        }
     }
 
     private synchronized void buildGoogleApiClient() {

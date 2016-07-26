@@ -8,15 +8,14 @@ public class WeatherContract {
     public interface View {
         void setProgressIndicator(boolean loading);
         void showWeather(Weather weather);
-        void showError(Error error);
-        void showConnectivityStatus(boolean online);
+        void showWeatherError(Error error);
+        void showLocationError();
     }
 
     public interface Presenter {
-        void start();
+        void startWeatherLoader();
+        void startLocationLoader();
         void registerEventBus();
         void unregisterEventBus();
-        void loadCurrentWeather();
-        void findCurrentLocation();
     }
 }

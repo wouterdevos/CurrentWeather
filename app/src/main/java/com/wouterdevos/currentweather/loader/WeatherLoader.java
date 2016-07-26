@@ -2,7 +2,6 @@ package com.wouterdevos.currentweather.loader;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
 import com.wouterdevos.currentweather.database.DatabaseHelper;
 import com.wouterdevos.currentweather.valueobject.Weather;
@@ -61,7 +60,6 @@ public class WeatherLoader extends AsyncTaskLoader<Weather> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRequestSuccess(Weather weather) {
-        Log.i(TAG, "onRequestSuccess: ");
         mWeather = weather;
         onContentChanged();
     }
